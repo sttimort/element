@@ -55,6 +55,14 @@
         fields: []
       };
     },
+    computed: {
+      validateState () {
+        if (this.fields.find(field => field.validateState === 'error'))
+          return 'error';
+        
+        return 'success';
+      }
+    },
     created() {
       this.$on('el.form.addField', (field) => {
         if (field) {
