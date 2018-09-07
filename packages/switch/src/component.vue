@@ -1,7 +1,7 @@
 <template>
   <div
     class="el-switch"
-    :class="{ 'is-disabled': switchDisabled, 'is-checked': checked }"
+    :class="{ 'is-disabled': switchDisabled, 'is-loading': loading, 'is-checked': checked }"
     role="switch"
     :aria-checked="checked"
     :aria-disabled="switchDisabled"
@@ -19,17 +19,30 @@
       :disabled="switchDisabled"
       @keydown.enter="switchValue"
     >
+    <i class="el-icon-loading" v-if="loading"></i>
     <span
       :class="['el-switch__label', 'el-switch__label--left', !checked ? 'is-active' : '']"
-      v-if="inactiveIconClass || inactiveText">
+      v-if="(inactiveIconClass || inactiveText) && inactivePosition === 'left' && !(checked && activePosition === 'left')">
       <i :class="[inactiveIconClass]" v-if="inactiveIconClass"></i>
       <span v-if="!inactiveIconClass && inactiveText" :aria-hidden="checked">{{ inactiveText }}</span>
+    </span>
+    <span
+      :class="['el-switch__label', 'el-switch__label--left', checked ? 'is-active' : '']"
+      v-if="(activeIconClass || activeText) && activePosition === 'left' && !(!checked && inactivePosition === 'left')">
+      <i :class="[activeIconClass]" v-if="activeIconClass"></i>
+      <span v-if="!activeIconClass && activeText" :aria-hidden="!checked">{{ activeText }}</span>
     </span>
     <span class="el-switch__core" ref="core" :style="{ 'width': coreWidth + 'px' }">
     </span>
     <span
+      :class="['el-switch__label', 'el-switch__label--right', !checked ? 'is-active' : '']"
+      v-if="(inactiveIconClass || inactiveText) && inactivePosition === 'right' && !(checked && activePosition === 'right')">
+      <i :class="[inactiveIconClass]" v-if="inactiveIconClass"></i>
+      <span v-if="!inactiveIconClass && inactiveText" :aria-hidden="checked">{{ inactiveText }}</span>
+    </span>
+    <span
       :class="['el-switch__label', 'el-switch__label--right', checked ? 'is-active' : '']"
-      v-if="activeIconClass || activeText">
+      v-if="(activeIconClass || activeText) && activePosition === 'right' && !(!checkbox && inactivePosition === 'right')">
       <i :class="[activeIconClass]" v-if="activeIconClass"></i>
       <span v-if="!activeIconClass && activeText" :aria-hidden="!checked">{{ activeText }}</span>
     </span>
@@ -56,6 +69,10 @@
         type: Boolean,
         default: false
       },
+      loading: {
+        type: Boolean,
+        default: false
+      },
       width: {
         type: Number,
         default: 40
@@ -70,6 +87,14 @@
       },
       activeText: String,
       inactiveText: String,
+      activePosition: {
+        type: String,
+        default: 'right'
+      },
+      inactivePosition: {
+        type: String,
+        default: 'left'
+      },
       activeColor: {
         type: String,
         default: ''
@@ -161,3 +186,13 @@
     }
   };
 </script>
+
+<style>
+.el-switch.is-loading {
+  position: relative;
+  pointer-events: none;
+}
+.el-switch.is-loading .el-icon-loading {
+  margin-right: 5px;
+}
+</style>
